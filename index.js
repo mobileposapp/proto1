@@ -27,13 +27,36 @@ angular.module('BlankApp').config(function ($stateProvider, $urlRouterProvider) 
 });
 
 /*------------------------------------------------------------------------------------------*/
-angular.module('BlankApp').controller('AppCtrl', function ($scope, $timeout, $mdSidenav) {
+angular.module('BlankApp').controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $window) {
     $scope.toggleLeft = buildToggler('left');
     $scope.toggleRight = buildToggler('right');
     $scope.items = [];
+    $scope.selectedItems = [];
 
-    for (var i = 0; i < 20; i++) {
-        $scope.items.push('Product Category ' + i);
+    $scope.appWidth = ($window.screen.width - 40) + 'px';
+    $scope.appHeight = ($window.screen.height - 168) + 'px';
+    console.log('------------------------');
+    for (var i = 1; i < 11; i++) {
+        var subItems = [];
+        for (var j = 1; j < 31; j++) {
+            subItems.push('Product ' + i + '-' + j);
+        }
+        $scope.items.push({label: 'Category ' + i, menu: subItems});
+    }
+    $scope.addItem = function (value) {
+        var item = {};
+        item.label = value;
+        item.qty = 1;
+        item.price = 100;
+        $scope.selectedItems.push(item);
+    }
+    $scope.increaseQty = function (item) {
+        item.qty++;
+    }
+    $scope.decreaseQty = function (item) {
+        if (item.qty > 1) {
+            item.qty--;
+        }
     }
 
     function buildToggler(componentId) {

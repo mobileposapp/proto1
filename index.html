@@ -6,49 +6,181 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link href="index.css" rel="stylesheet">
 </head>
-<body ng-app="BlankApp" ng-cloak layout="column" layout-wrap ng-controller="AppCtrl">
-
-<md-toolbar flex="10" class="md-hue-2">
-    <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
-            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-        </md-button>
-
-        <h2 flex md-truncate>Mobile POS App</h2>
-
-        <md-button class="md-icon-button" aria-label="Favorite">
-            <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
-        </md-button>
-
-        <md-button class="md-icon-button" aria-label="More" ng-click="toggleRight()">
-            <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
-        </md-button>
+<body ng-app="BlankApp" ng-controller="AppCtrl">
+<div layout="column">
+    <div flex="10" style="background-color: rgb(40,53,147);">
+        <md-toolbar class="md-hue-2">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button">
+                    <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                </md-button>
+                <h2 flex md-truncate>Mobile POS App</h2>
+                <md-button class="md-raised md-primary">Customers</md-button>
+            </div>
+        </md-toolbar>
     </div>
-</md-toolbar>
+    <md-content flex="90" style="background-color: #ffffff;">
+        <!--Desktop-->
+        <div layout="row" class="main-app-tabs" hide-xs hide-sm>
+            <md-card flex="60" style="position: relative;">
+                <md-tabs class="main-app-tabs">
+                    <md-tab label="{{tile.label}}" ng-repeat="tile in items">
+                        <md-content class="md-padding" style="margin: 10px;">
+                            <md-grid-list md-cols-xs="2" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6"
+                                          md-row-height-gt-md="1:1" md-row-height="2:2" md-gutter="12px"
+                                          md-gutter-gt-sm="8px">
+                                <md-grid-tile ng-repeat="product in tile.menu">
+                                    <md-button style="white-space:normal; width: 100%;height: 100%;"
+                                               class="md-raised md-primary" ng-click="addItem(product)">{{product}}
+                                    </md-button>
+                                </md-grid-tile>
+                            </md-grid-list>
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+            </md-card>
+            <md-card flex="40">
+                <md-list>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex="30">Description</label>
+                            <label style="text-align: center;" flex="30">QTY</label>
+                            <label style="text-align: center;" flex="15">Price</label>
+                            <label style="text-align: center;" flex="15">Total</label>
+                            <label style="text-align: center;" flex="10">Total</label>
+                        </div>
+                    </md-subheader>
+                    <md-divider></md-divider>
+                </md-list>
+                <md-list style="max-height: 250px;min-height: 250px;overflow-x: hidden;overflow-y: auto;">
+                    <md-list-item class="md-1-line" ng-click="null" ng-repeat="tile in selectedItems">
+                            <label flex="30">{{tile.label}}</label>
+                            <div style="text-align: center;" flex="30">
+                                <md-button ng-click="decreaseQty(tile)" class="md-icon-button launch" aria-label="Use Android"><label>-</label></md-button>
+                                <label>{{tile.qty}}</label>
+                                <md-button ng-click="increaseQty(tile)" class="md-icon-button launch" aria-label="Use Android"><label>+</label></md-button>
+                            </div>
+                            <label style="text-align: center;" flex="15">{{tile.price}}</label>
+                            <label style="text-align: center;" flex="15">{{tile.price*tile.qty}}</label>
+                            <label style="text-align: center;" flex="10">
+                                <md-button class="md-icon-button" aria-label="More">
+                                    <md-icon md-svg-icon="img/icons/ic_close_24px.svg"></md-icon>
+                                </md-button>
+                            </label>
+                        <md-divider></md-divider>
+                    </md-list-item>
+                </md-list>
+                <md-list>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex="20">Total : 720.00</label>
+                            <label style="text-align: center;" flex>VAT @ 14.5% : 109.62</label>
+                            <label style="text-align: center;" flex>Service Tax @ 5.6% : 42.34</label>
+                        </div>
+                    </md-subheader>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex>Service Charge @ 5% : 36.00</label>
+                            <label style="text-align: center;" flex>Round Off : 0.04</label>
+                            <label style="text-align: center;" flex="20">Net : 908.00</label>
+                        </div>
+                    </md-subheader>
+                    <md-divider></md-divider>
+                </md-list>
+                <div layout="row">
+                    <md-button flex class="md-raised md-primary">Cash</md-button>
+                    <md-button flex class="md-raised md-primary">credit/Debit Card</md-button>
+                </div>
+                <div layout="row">
+                    <md-button flex class="md-raised md-warn">Gift cards</md-button>
+                    <md-button flex class="md-raised md-warn">Payment Options</md-button>
+                </div>
+            </md-card>
+        </div>
+        <!--Desktop-->
 
-<div flex="85" layout="column" style="background-color: white;">
-    <div flex="100"  layout="row">
-        <md-card flex="20">
-            <md-list flex style="overflow-x: hidden;overflow-y: auto;">
-                <md-list-item ng-repeat="item in items" ng-click="null" class="md-3-line"> <div class="md-list-item-text" layout="column"> <h3>{{item}}</h3> </div>  <md-divider ></md-divider> </md-list-item>
-            </md-list>
-        </md-card>
-        <md-card flex="80"> </md-card>
-    </div>
+        <!--Mobile-->
+        <div layout="column" class="main-app-tabs" hide-md hide-lg hide-sm>
+            <md-card flex="30">
+                <md-list>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex="30">Description</label>
+                            <label style="text-align: center;" flex="30">QTY</label>
+                            <label style="text-align: center;" flex="15">Price</label>
+                            <label style="text-align: center;" flex="15">Total</label>
+                            <label style="text-align: center;" flex="10">Total</label>
+                        </div>
+                    </md-subheader>
+                    <md-divider></md-divider>
+                </md-list>
+                <md-list style="max-height: 250px;min-height: 250px;overflow-x: hidden;overflow-y: auto;">
+                    <md-list-item class="md-1-line" ng-click="null" ng-repeat="tile in selectedItems">
+                        <label flex="30">{{tile.label}}</label>
+                        <div style="text-align: center;" flex="30">
+                            <md-button ng-click="decreaseQty(tile)" class="md-icon-button launch" aria-label="Use Android"><label>-</label></md-button>
+                            <label>{{tile.qty}}</label>
+                            <md-button ng-click="increaseQty(tile)" class="md-icon-button launch" aria-label="Use Android"><label>+</label></md-button>
+                        </div>
+                        <label style="text-align: center;" flex="15">{{tile.price}}</label>
+                        <label style="text-align: center;" flex="15">{{tile.price*tile.qty}}</label>
+                        <label style="text-align: center;" flex="10">
+                            <md-button class="md-icon-button" aria-label="More">
+                                <md-icon md-svg-icon="img/icons/ic_close_24px.svg"></md-icon>
+                            </md-button>
+                        </label>
+                        <md-divider></md-divider>
+                    </md-list-item>
+                </md-list>
+                <md-list>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex="20">Total : 720.00</label>
+                            <label style="text-align: center;" flex>VAT @ 14.5% : 109.62</label>
+                            <label style="text-align: center;" flex>Service Tax @ 5.6% : 42.34</label>
+                        </div>
+                    </md-subheader>
+                    <md-subheader class="md-no-sticky">
+                        <div layout="row">
+                            <label style="text-align: center;" flex>Service Charge @ 5% : 36.00</label>
+                            <label style="text-align: center;" flex>Round Off : 0.04</label>
+                            <label style="text-align: center;" flex="20">Net : 908.00</label>
+                        </div>
+                    </md-subheader>
+                    <md-divider></md-divider>
+                </md-list>
+                <div layout="row">
+                    <md-button flex class="md-raised md-primary">Cash</md-button>
+                    <md-button flex class="md-raised md-primary">credit/Debit Card</md-button>
+                </div>
+                <div layout="row">
+                    <md-button flex class="md-raised md-warn">Gift cards</md-button>
+                    <md-button flex class="md-raised md-warn">Payment Options</md-button>
+                </div>
+            </md-card>
+            <md-card flex="50" style="position: relative;">
+                <md-tabs class="main-app-tabs">
+                    <md-tab label="{{tile.label}}" ng-repeat="tile in items">
+                        <md-content class="md-padding" style="margin: 10px;">
+                            <md-grid-list md-cols-xs="2" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6"
+                                          md-row-height-gt-md="1:1" md-row-height="2:2" md-gutter="12px"
+                                          md-gutter-gt-sm="8px">
+                                <md-grid-tile ng-repeat="product in tile.menu">
+                                    <md-button style="white-space:normal; width: 100%;height: 100%;"
+                                               class="md-raised md-primary" ng-click="addItem(product)">{{product}}
+                                    </md-button>
+                                </md-grid-tile>
+                            </md-grid-list>
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+            </md-card>
+        </div>
+        <!--Mobile-->
+
+
+    </md-content>
 </div>
-
-<div flex="5" style="background-color: rgb(40,53,147);">
-</div>
-<!--
-<ul class="nav navbar-nav">
-    <li><a ui-sref="tab1">Tab-1</a></li>
-    <li><a ui-sref="tab2">Tab-2</a></li>
-    <li><a ui-sref="tab3">Tab-3</a></li>
-    <li><a ui-sref="tab4">Tab-4</a></li>
-</ul>
-
-<div ui-view></div>
--->
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="https://angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
